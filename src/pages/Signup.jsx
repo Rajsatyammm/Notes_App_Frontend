@@ -43,12 +43,10 @@ const Signup = () => {
                 navigate("/dashboard");
             }, 1500);
         } catch (err) {
-            console.log('error', err)
             if (err.response.message === ErrorMessage.ERROR_SHORT_PASSWORD) {
                 setError(ErrorMessage.ERROR_SHORT_PASSWORD)
                 return;
             }
-            console.log(err);
             setError(err.response?.data?.message || ErrorMessage.ERROR_CREATING_ACCOUNT);
         }
     };

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import APIEndpoints from "../constants/APIEndpoints";
 
 const Profile = () => {
-    const [user, setUser] = useState({ name: "", email: "" });
+    const [user, setUser] = useState({ name: "", email: "", password: "" });
     const [success, setSuccess] = useState("");
     const [error, setError] = useState("");
     const navigate = useNavigate();
@@ -30,12 +30,13 @@ const Profile = () => {
         try {
             const response = await axios.put(
                 "/api/users/updateProfile",
-                { name: user.name, email: user.email },
+                { password: user?.password, email: user.email, username: user.username },
                 { headers: { "x-auth-token": localStorage.getItem("token") } }
             );
-            setSuccess("Profile updated successfully!");
+            if (response.status == 200)
+                setSuccess("Profile updated successfully!");
         } catch (err) {
-            setError("Error updating profile.");
+            setError("Error updating profile.", err);
         }
     };
 
@@ -48,11 +49,11 @@ const Profile = () => {
 
                 <form onSubmit={handleSubmit}>
                     <div className="mb-4">
-                        <label className="block text-sm font-medium text-gray-700">name</label>
+                        <label className="block text-sm font-medium text-gray-700">Username</label>
                         <input
                             type="text"
-                            value={user.name}
-                            onChange={(e) => setUser({ ...user, name: e.target.value })}
+                            value={user.username}
+                            onChange={(e) => setUser({ ...user, username: e.target.value })}
                             className="w-full p-2 border border-gray-300 rounded mt-2"
                             required
                         />
@@ -64,6 +65,17 @@ const Profile = () => {
                             type="email"
                             value={user.email}
                             onChange={(e) => setUser({ ...user, email: e.target.value })}
+                            className="w-full p-2 border border-gray-300 rounded mt-2"
+                            required
+                        />
+                    </div>
+
+                    <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700">Password</label>
+                        <input
+                            type="password"
+                            value={user.password}
+                            onChange={(e) => setUser({ ...user, password: e.target.value })}
                             className="w-full p-2 border border-gray-300 rounded mt-2"
                             required
                         />
