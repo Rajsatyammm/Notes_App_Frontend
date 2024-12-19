@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from '../axios';
 import ErrorMessage from '../constants/ErrorMessage';
-
+import APIEndpoint from '../constants/APIEndpoints'
 function NoteForm() {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
@@ -17,7 +17,7 @@ function NoteForm() {
                 setError("All fields are required.")
                 return;
             }
-            await axios.post('/api/notes/add',
+            await axios.post(APIEndpoint.ADD_NOTE,
                 {
                     title,
                     content,
