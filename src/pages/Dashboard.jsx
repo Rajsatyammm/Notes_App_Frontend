@@ -26,6 +26,11 @@ const Dashboard = () => {
 
     const handleDeleteNote = (noteId) => {
         setNotes(notes.filter(note => note._id !== noteId));
+        if (showingFilteredNotes) {
+            setFilteredNotes(filteredNotes.filter(note =>
+                note._id !== noteId)
+            )
+        }
     };
 
     const handleSearch = () => {
