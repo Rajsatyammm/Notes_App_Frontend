@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "../axios";
 import ErrorMessage from "../constants/ErrorMessage";
 import APIEndpoints from "../constants/APIEndpoints";
@@ -129,9 +129,9 @@ const Signup = () => {
                 <div className="mt-4 text-center">
                     <p>
                         Already have an account?{" "}
-                        <a href="/login" className="text-blue-500 hover:text-blue-700">
+                        <Link href="/login" className="text-blue-500 hover:text-blue-700">
                             Login here
-                        </a>
+                        </Link>
                     </p>
                 </div>
             </div>
