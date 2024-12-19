@@ -35,7 +35,6 @@ const Signup = () => {
                 setPassword('')
                 setConfirmPassword('')
             }, 600)
-            console.log('responseData', response.data)
             setSuccess("Account created successfully!");
             setError("");
 
