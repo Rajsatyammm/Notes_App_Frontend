@@ -41,7 +41,7 @@ function NoteForm({ setLoader, updateNote, data }) {
                     }
                 );
             } else {
-                await axios.post(`${APIEndpoint.UPDATE_NOTE}${data._id}`,
+                await axios.put(`${APIEndpoint.UPDATE_NOTE}${data._id}`,
                     {
                         title,
                         content,
