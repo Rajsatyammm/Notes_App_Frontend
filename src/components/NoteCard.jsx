@@ -2,9 +2,12 @@ import axios from "../axios";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import ErrorMessage from "../constants/ErrorMessage";
 import APIEndpoints from "../constants/APIEndpoints";
+import { useNavigate } from "react-router-dom"
 
 
 const NoteCard = ({ data, onDelete }) => {
+
+    const navigate = useNavigate();
 
     const handleDelete = async (id) => {
         try {
@@ -24,19 +27,19 @@ const NoteCard = ({ data, onDelete }) => {
     }
 
     const handleEdit = async (id) => {
-
+        navigate(`/updateNote/${id}`)
     }
 
     return (
         <div className="relative border border-gray-300 rounded-lg p-4 bg-white shadow-md">
             <div className="absolute top-2 right-2 flex space-x-2">
-                {/* <button
+                <button
                     onClick={() => handleEdit(data._id)}
                     className="text-blue-500 hover:text-blue-700"
                     title="Edit Note"
                 >
                     <FaEdit size={20} />
-                </button> */}
+                </button>
                 <button
                     onClick={() => handleDelete(data._id)}
                     className="text-red-500 hover:text-red-700"

@@ -1,15 +1,23 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from '../axios';
 import ErrorMessage from '../constants/ErrorMessage';
 import APIEndpoint from '../constants/APIEndpoints'
 
-function NoteForm({ setLoader }) {
+function NoteForm({ setLoader, updateNote, data }) {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [category, setCategory] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate()
+
+    const setData = () => {
+        if (data) {
+            setTitle(data.title);
+            setContent(data.content);
+            setCategory(data.category);
+        }
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -19,18 +27,33 @@ function NoteForm({ setLoader }) {
                 return;
             }
             setLoader(true)
-            await axios.post(APIEndpoint.ADD_NOTE,
-                {
-                    title,
-                    content,
-                    category
-                },
-                {
-                    headers: {
-                        'x-auth-token': localStorage.getItem('token')
+            if (!updateNote) {
+                await axios.post(APIEndpoint.ADD_NOTE,
+                    {
+                        title,
+                        content,
+                        category
+                    },
+                    {
+                        headers: {
+                            'x-auth-token': localStorage.getItem('token')
+                        }
                     }
-                }
-            );
+                );
+            } else {
+                await axios.post(`${APIEndpoint.UPDATE_NOTE}${data._id}`,
+                    {
+                        title,
+                        content,
+                        category
+                    },
+                    {
+                        headers: {
+                            'x-auth-token': localStorage.getItem('token')
+                        }
+                    }
+                );
+            }
             setTitle('');
             setContent('');
             setCategory('');
@@ -54,6 +77,10 @@ function NoteForm({ setLoader }) {
             setLoader(false);
         }
     };
+
+    useEffect(() => {
+        setData();
+    }, [data])
 
     return (
         <form onSubmit={handleSubmit} className="space-y-4 mb-6">
@@ -79,7 +106,7 @@ function NoteForm({ setLoader }) {
                 className="w-full p-2 border border-gray-300 rounded"
             />
             <button type="submit" className="w-full p-2 bg-blue-500 text-white rounded">
-                Add Note
+                {updateNote ? "Update Note" : "Add Note"}
             </button>
         </form>
     );
