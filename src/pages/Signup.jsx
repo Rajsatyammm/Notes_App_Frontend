@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "../axios";
 import ErrorMessage from "../constants/ErrorMessage";
 import APIEndpoints from "../constants/APIEndpoints";
+import Loader from "../components/Loader";
+import { HiEye, HiEyeOff } from 'react-icons/hi'
 
 const Signup = () => {
     const [name, setName] = useState("");
@@ -11,10 +13,24 @@ const Signup = () => {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false)
+    const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false)
+
     const navigate = useNavigate();
+
+    const togglePasswordVisibility = () => {
+        setIsPasswordVisible(!isPasswordVisible)
+    }
+
+    const toggleConfirmPasswordVisibility = () => {
+        setIsConfirmPasswordVisible(!isConfirmPasswordVisible)
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsConfirmPasswordVisible(false);
+        setIsPasswordVisible(false);
 
         if (!name || !email || !password || !confirmPassword) {
             setError(ErrorMessage.ERROR_ALL_FIELDS_ARE_REQUIRED);
@@ -27,6 +43,7 @@ const Signup = () => {
         }
 
         try {
+            setLoading(true);
             const userData = { username: name, email, password };
             const response = await axios.post(APIEndpoints.REGISTER_USER, userData);
             setTimeout(() => {
@@ -49,9 +66,10 @@ const Signup = () => {
             }
             setError(err.response?.data?.message || ErrorMessage.ERROR_CREATING_ACCOUNT);
         }
+        setLoading(false);
     };
 
-    return (
+    return (loading ? <Loader /> :
         <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
             <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
                 <h2 className="text-2xl font-semibold text-center mb-6">Sign Up</h2>
@@ -90,28 +108,47 @@ const Signup = () => {
                     {/* Password Field */}
                     <div className="mb-4">
                         <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
-                        <input
-                            type="password"
-                            id="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="w-full p-2 border border-gray-300 rounded mt-2"
-                            placeholder="Enter your password"
-                            required
-                        />
+                        <div className="relative mt-2">
+                            <input
+                                type={isPasswordVisible ? 'text' : 'password'}
+                                id="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className="w-full p-2 border border-gray-300 rounded pr-10" // pr-10 for padding on the right to make space for the icon
+                                placeholder="Enter your password"
+                                required
+                            />
+                            <button
+                                type="button"
+                                onClick={togglePasswordVisibility}
+                                className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-600" // Position the icon
+                            >
+                                {isPasswordVisible ? <HiEyeOff className="w-6 h-6" /> : <HiEye className="w-6 h-6" />}
+                            </button>
+                        </div>
                     </div>
 
                     {/* Confirm Password Field */}
-                    <div className="mb-6">
-                        <label className="block text-sm font-medium text-gray-700">Confirm Password</label>
-                        <input
-                            type="password"
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
-                            className="w-full p-2 border border-gray-300 rounded mt-2"
-                            placeholder="Confirm your password"
-                            required
-                        />
+                    <div className="mb-4">
+                        <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">Confirm Password</label>
+                        <div className="relative mt-2">
+                            <input
+                                type={isConfirmPasswordVisible ? 'text' : 'password'} // Toggle input type based on state
+                                id="confirmPassword"
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                className="w-full p-2 border border-gray-300 rounded pr-10" // pr-10 for padding on the right to make space for the icon
+                                placeholder="Enter your password"
+                                required
+                            />
+                            <button
+                                type="button"
+                                onClick={toggleConfirmPasswordVisibility}
+                                className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-600" // Position the icon
+                            >
+                                {isConfirmPasswordVisible ? <HiEyeOff className="w-6 h-6" /> : <HiEye className="w-6 h-6" />}
+                            </button>
+                        </div>
                     </div>
 
                     {/* Submit Button */}
