@@ -35,7 +35,8 @@ const Dashboard = () => {
 
     const handleSearch = () => {
         const filtered = notes.filter(note =>
-            note.category.toLowerCase().includes(searchText.toLowerCase())
+            note.category.toLowerCase().includes(searchText.toLowerCase()) ||
+            note.title.toLowerCase().includes(searchText.toLowerCase())
         );
         setFilteredNotes(filtered);
         setShowingFilteredNotes(true);

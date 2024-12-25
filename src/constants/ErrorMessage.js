@@ -1,6 +1,8 @@
 const ErrorMessage = {
     "ERROR_AUTH_DENIED": "No token, authorization denied",
+    "ERROR_AUTH_DENIED_REDIRECTING": "No token, authorization denied, redirecting to login page",
     "ERROR_TOKEN_NOT_VALID": "Token is not valid",
+    "ERROR_TOKEN_NOT_VALID_REDIRECTING": "Token is not valid, redirecting to login page",
     "SERVER_ERROR": "Server error",
     "NOTE_NOT_FOUND": "Note not found",
     "NOTE_DELETED": "Note deleted",

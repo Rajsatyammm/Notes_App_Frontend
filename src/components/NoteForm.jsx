@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from '../axios';
 import ErrorMessage from '../constants/ErrorMessage';
 import APIEndpoint from '../constants/APIEndpoints'
-function NoteForm() {
+
+function NoteForm({ setLoader }) {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [category, setCategory] = useState('');
@@ -17,6 +18,7 @@ function NoteForm() {
                 setError("All fields are required.")
                 return;
             }
+            setLoader(true)
             await axios.post(APIEndpoint.ADD_NOTE,
                 {
                     title,
@@ -33,10 +35,23 @@ function NoteForm() {
             setContent('');
             setCategory('');
             navigate('/dashboard')
+            setLoader(false);
         } catch (error) {
-            if (error.response.data.message === ErrorMessage.ERROR_AUTH_DENIED)
-                navigate('/login')
-            console.error(ErrorMessage.ERROR_CREATING_NOTE, error);
+            if (error.response.data.message === ErrorMessage.ERROR_AUTH_DENIED ||
+                error.response.data.message === ErrorMessage.ERROR_TOKEN_NOT_VALID
+            ) {
+                setError(
+                    error.response.data.message == ErrorMessage.ERROR_AUTH_DENIED_REDIRECTING
+                        ? ErrorMessage.ERROR_AUTH_DENIED_REDIRECTING : ErrorMessage.ERROR_TOKEN_NOT_VALID_REDIRECTING
+                );
+                setTimeout(() => {
+                    localStorage.removeItem('token');
+                    navigate('/login')
+                }, 1500)
+            }
+            else
+                console.error(ErrorMessage.ERROR_CREATING_NOTE, error);
+            setLoader(false);
         }
     };
 
